@@ -24,8 +24,7 @@ no GitHub.
 
 - **Sobrevivência & riscos competitivos** — modelos Bayesianos aplicados à evasão
   universitária. Iniciação Científica em andamento.
-- **Finanças quantitativas & sistemas complexos** — regimes de mercado, wavelets,
-  processos de Hawkes, em Julia.
+- **Finanças quantitativas & sistemas complexos** — regimes de mercado.
 - **Robótica probabilística** — fundação de um grupo estudantil na UFSCar Sorocaba.
 - **Ensino** — guias de estudo em LaTeX e animações em Manim.
 
