@@ -1,52 +1,121 @@
 ## Alan Profeta
 
-Undergraduate in Data Science and Artificial Intelligence at **UFSCar Sorocaba** (Brazil).
+Undergraduate in Data Science and Artificial Intelligence — **UFSCar Sorocaba**, Brazil.
 
 I work at the intersection of probability and ill-behaved problems: university
-dropout prediction under competing risks, financial market regimes, and
-information dynamics on networks. I'm drawn to AI safety through the lens of
-uncertainty quantification.
+dropout under competing risks, regime structure in financial markets, and
+information dynamics on networks. I came to AI safety from the uncertainty
+quantification side rather than the alignment-theory side.
 
-**Research lines**
-
-- Bayesian survival analysis with competing risks and frailty — applied to
-  university dropout. Ongoing undergraduate research project.
-- Quantitative finance and complex systems — market regimes, wavelet
-  decomposition, Hawkes processes on B3 equities; rumor propagation models
-  with content obsolescence.
-- Probabilistic robotics — state estimation and decision-making under
-  uncertainty. Conceptual axis of the robotics & AI student group being
-  founded at UFSCar Sorocaba.
-
-Mostly Julia, Python and R. Occasionally LaTeX and Manim, for teaching material.
-
-**Links** — [site](https://alanprofeta.github.io) ·
-[Lattes](http://lattes.cnpq.br/7022065851389897) ·
-[alanprofeta@estudante.ufscar.br](mailto:alanprofeta@estudante.ufscar.br)
+Full site, in Portuguese and English → **[alanprofeta.github.io](https://alanprofeta.github.io)**
 
 ---
 
-<details>
-<summary>Em português</summary>
+### Survival analysis with competing risks
 
-<br>
+*Ongoing undergraduate research project (Iniciação Científica), Bayesian, applied to university dropout.*
 
-Graduando em Ciência de Dados e Inteligência Artificial na **UFSCar Sorocaba**.
+The usual shortcut is to model dropout as a single absorbing event. It is wrong in a
+specific and consequential way: a student who leaves, one who transfers, and one who
+graduates are not the same object, and treating the last two as "censored" biases the
+first one upward.
 
-Trabalho na interseção entre probabilidade e problemas mal-comportados:
-predição de evasão universitária sob riscos competitivos, regimes em mercados
-financeiros e dinâmica de informação em redes. Interesso-me por segurança de IA
-pelo lado da quantificação de incerteza.
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> Enrolled
+    Enrolled --> Graduated : h₁(t)
+    Enrolled --> Dropout : h₂(t)
+    Enrolled --> Transferred : h₃(t)
+    Enrolled --> Censored : administrative
+```
 
-**Linhas de pesquisa**
+Each terminal state gets its own cause-specific hazard. With a shared frailty $u_i$
+absorbing unobserved heterogeneity between students (cohort, program, campus):
 
-- Análise de sobrevivência Bayesiana com riscos competitivos e fragilidade,
-  aplicada à evasão universitária. Iniciação Científica em andamento.
-- Finanças quantitativas e sistemas complexos — regimes de mercado,
-  decomposição wavelet, processos de Hawkes em ativos da B3; modelos de
-  propagação de rumores com obsolescência de conteúdo.
-- Robótica probabilística — estimação de estado e decisão sob incerteza. Eixo
-  conceitual do grupo estudantil de robótica e IA em fundação na UFSCar
-  Sorocaba.
+$$h_k(t \mid Z_i, u_i) \;=\; u_i \, h_{0k}(t) \, \exp(\beta_k^\top Z_i), \qquad k = 1, \dots, K$$
 
-</details>
+The subtlety that motivates the whole thing: the quantity a university actually needs
+for policy is the **cumulative incidence** of dropout, and that is *not* $1 - S_k(t)$
+once other causes compete for the same student. It has to integrate over the all-cause
+survival,
+
+$$F_k(t) \;=\; \int_0^t S(u^-)\, h_k(u) \, \mathrm{d}u$$
+
+which is why the naive one-risk model does not just lose precision — it answers a
+different question than the one being asked.
+
+**Keywords** — competing risks · frailty · Bayesian inference · student retention
+
+---
+
+### Quantitative finance and complex systems
+
+Two threads. The first is a three-layer strategy on B3 (Brazilian exchange) equities,
+where each layer answers a different question about the same series:
+
+```mermaid
+flowchart LR
+    A["B3 price series"] --> B["MODWT<br/>wavelet decomposition"]
+    B --> C["Statistical Jump Model<br/>regime classification"]
+    C --> D["Bayesian hazard / frailty<br/>position sizing"]
+    D --> E["Position"]
+```
+
+Decomposition separates timescales, regime classification asks *which* market we are
+currently in, and the hazard layer asks *how long* the current regime is likely to
+survive — which is what actually sets exposure. The safeguards against look-ahead bias
+are explicit at every layer, since each one is an opportunity to leak the future into
+the past.
+
+> No performance figures are published, by design. The method is the artifact; a
+> backtest curve is not evidence, and presenting one as a result would be a different
+> kind of claim than I want to make.
+
+The second thread is rumor propagation on networks — classical Daley–Kendall and
+Maki–Thompson models assume the content being spread is timeless. It isn't. Adding
+content obsolescence introduces a second random variable (time until the environment
+changes) racing against the propagation time, which changes the qualitative behaviour
+of the process rather than just its constants. Research note in preparation.
+
+**Keywords** — market regimes · MODWT · Hawkes processes · contagion · rumor dynamics
+
+---
+
+### Probabilistic robotics
+
+Conceptual axis of the robotics and AI student group currently being founded at UFSCar
+Sorocaba: state estimation, filtering, and decision-making under uncertainty in
+physical agents. Early stage — the group exists, the research output does not yet.
+
+---
+
+### Watchlist
+
+Areas I am testing, with no project attached yet — listed here as direction, not as
+credentials: **AI for scientific simulation** (whether the same Bayesian and stochastic
+process machinery transfers to reaction modeling or inference on noisy biological data),
+extreme value theory, and causal inference.
+
+---
+
+### Teaching
+
+Teaching material is research output, not a hobby. A multi-file LaTeX study guide for
+Calculus I, built around intuition before formalism, and a Manim animation of the Monty
+Hall problem in Portuguese — conditional probability is where most students' intuition
+first betrays them, and it is worth the effort of animating.
+
+---
+
+### Tooling
+
+Julia and Python for modeling — the Hawkes replication runs on Julia with PythonCall.jl.
+LaTeX and Manim for teaching material. My site is hand-written HTML — no framework, no
+build step.
+
+---
+
+**[Site](https://alanprofeta.github.io)** ·
+**[Lattes](http://lattes.cnpq.br/7022065851389897)** ·
+**[alanprofeta@estudante.ufscar.br](mailto:alanprofeta@estudante.ufscar.br)**
